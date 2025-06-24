@@ -38,6 +38,22 @@ All roadmap items converge towards the rollout of the **Ethik Engine** (see `sub
 
 ## 🛠️ Internal Systems & Tooling Development
 
+### INF-SVD-001: Stable-vs-Dev Isolation Framework
+- **Status**: Completed (2025-06-24) ✅
+- **Owner**: EGOS Core Tooling Team / Cascade
+- **Description**: Introduce dual-maturity code layout (`src/` vs `dev/`), promotion tooling, Git hooks, and CI gates to protect production code while enabling rapid experimentation.
+- **Deliverables**:
+  1. `subsystems/*/src` directories and volume mounts in production compose.
+  2. `subsystems/*/dev` hot-reload mounts with port offsets.
+  3. Pre-commit guard, commit-msg hook, `git_promote.ps1` helper.
+  4. CI pipeline: Ruff, Pytest (≥80 % coverage), placeholder ATRiAN ethics scan.
+  5. Documentation updates (README, subsystem READMEs, work log).
+- **Validation Metrics**:
+  - All main-branch commits build & pass tests in < 3 min.
+  - Dev stack start-up time < 15 s with hot-reload enabled.
+  - Coverage baseline 82 % on 2025-06-24 build (see CI artifact).
+- **Cross-References**: `scripts/git_promote.ps1`, `.github/workflows/dev_ci.yml`, `.git/hooks/pre-commit`, `scripts/setup_dev_env.ps1`, `WORK_2025-06-24_Stable_vs_Dev_Isolation.md`
+
 ### AUTOXREF-001: AutoCrossRef Subsystem Development
 - **Status**: In Progress
 - **Owner**: EGOS Team
