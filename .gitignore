@@ -1,0 +1,12 @@
+# Disallow everything by default
+*/**
+
+# Allow root documentation & license
+!README.md
+!ROADMAP.md
+!LICENSE
+!/.gitignore
+
+# Allow public docs + images
+!docs-public/
+!assets/
