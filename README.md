@@ -97,7 +97,17 @@ Promotion path:
 
 Guard rails:
 * Pre-commit hook prevents direct edits to `src/` outside `main`.
-* CI blocks merges on lint/test/coverage failures.
+* Commit-msg hook enforces Conventional Commits (`scripts/setup_dev_env.ps1`).
+* CI blocks merges on lint/test/coverage failures (≥80 % line coverage).
+
+Quick alias:
+```bash
+git config --global alias.promote '!powershell -NoProfile -File scripts/git_promote.ps1'
+```
+Run once and you can `git promote "Commit message"` to move vetted code from `dev/` to `src/`. Configure hooks on fresh clones with:
+```powershell
+powershell scripts/setup_dev_env.ps1
+```
 
 ---
 
