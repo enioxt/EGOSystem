@@ -13,6 +13,7 @@
 ![Status: Active](https://github.com/enioxt/EGOS)
 !Ethical Framework: ETHIK
 ![GitHub Stars](https://github.com/enioxt/EGOS)
+![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)
 
 ## ðŸ” What is EGOS?
 
