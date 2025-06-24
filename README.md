@@ -80,6 +80,27 @@ Unlike theoretical ethics frameworks or general-purpose AI platforms, EGOS provi
 - **Modular Integration**: Components can be adopted individually based on your needs
 - **Living Documentation**: Continuously evolving best practices and standards
 
+## Stable vs Dev workflow
+
+EGOS now follows a **single-tree, dual-maturity** layout:
+
+| Location | Purpose | Branch |
+|----------|---------|--------|
+| `subsystems/<module>/src` | 📦 **Stable** production-ready code mounted by `docker-compose.yml` | `main` |
+| `subsystems/<module>/dev` | 🧪 Experimental / WIP code hot-reloaded by `docker-compose.dev.yml` | feature branches |
+
+Promotion path:
+1. Develop in `dev/` on a feature branch.
+2. Open PR → CI runs Ruff, Pytest (coverage ≥ 80 %), ATRiAN ethics scan.
+3. Use `scripts/git_promote.ps1` to move vetted files to `src/` within the PR.
+4. Merge into `main` — prod containers rebuild automatically.
+
+Guard rails:
+* Pre-commit hook prevents direct edits to `src/` outside `main`.
+* CI blocks merges on lint/test/coverage failures.
+
+---
+
 ## ðŸš€ Getting Started
 
 ### Prerequisites
