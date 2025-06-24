@@ -8,5 +8,5 @@
 !/.gitignore
 
 # Allow public docs + images
-!docs-public/
-!assets/
+!docs-public/**
+!assets/**
