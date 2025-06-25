@@ -36,9 +36,11 @@ EGOS stands apart from other AI ethics platforms by implementing a practical, ac
 | **ATRiAN Module** | The system's ethical core, providing intuitive guidance and context management |
 | **ETHIK Framework** | Comprehensive methodology for evaluating AI systems against ethical principles |
 | **TaskMaster AI** | Structured task management system aligned with MQP principles |
+| **AgentCore Auto-Orchestration** | Always-on planner + executor that routes API & IDE actions through configurable DAGs |
 | **Distributed Ethical Validator (DEV)** | Decentralized consensus mechanism for ethical validation |
 | **Blockchain Integration** | $ETHIK token across multiple chains enables transparent governance |
 | **Ethik Engine (Central Nervous System)** | Real-time ethical intelligence & crowdsourced validation layer; rewards Nodes with Ethik Points for issue triage |
+| **ElectricSQL Sync Layer (PoC)** | Offline-first Postgres replication powering dashboards; launch with `docker/stack/launch_electric_poc_standalone.ps1` |
 | **ATRiAN: Proactive Ethical Incident Avoidance** | ATRiAN doesn't just react to ethical breaches; it proactively identifies potential incidents and provides mechanisms for their avoidance. This unique capability is crucial for building trustworthy AI systems. Learn more about our methodology and proof of concept. |
 | **Dashboard System** | Visual monitoring of ethical metrics and system performance |
 | **Ethical Constitution Validator (MVP)** | Upload KOIOS PDD → ATRiAN risk report (JSON + PDF). Private beta Q3 2025 |

@@ -814,6 +814,19 @@ This section outlines the high-level, long-term aspirations for the EGOS project
 > **Note:** This roadmap has been migrated to the new documentation structure as part of the May 2025 EGOS project reorganization. All cross-references have been updated to reflect the new paths.
 
 
+### AgentCore Subsystem (AI Search Paradigm)
+*Focus: Implement the AI Search Paradigm with multi-node DAG planning, execution, and result aggregation for autonomous pipeline execution.*
+
+| ID | Priority | Description | Status | Owner | Due |
+|----|----------|-------------|--------|-------|-----|
+| **AC-M0** | HIGH | MVP – Basic DAG planning, execution, and response writing | Completed | Core Dev | 2025-06-10 |
+| **AC-M1** | HIGH | AgentCore v0.5 – Multi-node DAG, output chaining, telemetry integration | Completed | Cascade | 2025-06-24 |
+| **AC-M2** | MEDIUM | Embedding-based intent detection and conditional branching | Completed | Cascade | 2025-06-24 |
+| **AC-M3** | MEDIUM | ATRiAN ethics gate integration | Planned | TBD | 2025-07-31 |
+| **AC-M4** | LOW | Parallel execution and interactive refinement | Planned | TBD | 2025-08-15 |
+
+Cross-References: `subsystems/AgentCore/README.md`, `WORK_2025-06-24_AgentCore_Pipeline_Integration.md`, `/ai_autonomous_task_runner`.
+
 ### Ethik Engine Subsystem (Real-Time Governance)
 *Focus: Implement the self-monitoring, crowdsourced validation layer that unifies logs, rules, incentives and automated fixes.*
 
@@ -821,6 +834,7 @@ This section outlines the high-level, long-term aspirations for the EGOS project
 |----|----------|-------------|--------|-------|-----|
 | **EE-M0** | CRITICAL | Telemetry MVP – Add Loki/Promtail and Grafana dashboards | Completed | Core Dev / Observability | 2025-06-24 |
 | **EE-M0.1** | HIGH | Telemetry Enhancement – Add Prometheus exporters and advanced dashboards | Planned | Core Dev / Observability | 2025-07-15 |
+| **EE-M0.2** | HIGH | ElectricSQL Sync PoC – offline-first replication stack integration | In Progress | Core Dev | 2025-07-20 |
 | **EE-M1** | HIGH | Issue Generator – Directory watcher + rule engine skeleton (flake8, markdownlint) feeding Script-Meta API | Planned | Core Dev | 2025-07-31 |
 | **EE-M2** | HIGH | Validation Portal – Next.js UI + reward integration calling EaaS `/mint` | Planned | Front-End Guild / Token Team | 2025-08-31 |
 | **EE-M3** | MEDIUM | Ethik Token Integration – Leverage existing mainnet token (0x633b346b85c4877ace4d47f7aa72c2a092136cb5) on Base; implement buy-back & reward contract | Planned | Token Team | 2025-09-30 |
