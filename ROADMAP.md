@@ -832,13 +832,12 @@ Cross-References: `subsystems/AgentCore/README.md`, `WORK_2025-06-24_AgentCore_P
 
 | ID | Priority | Description | Status | Owner | Due |
 |----|----------|-------------|--------|-------|-----|
-| **EE-M0** | CRITICAL | Telemetry MVP – Add Loki/Promtail and Grafana dashboards | Completed | Core Dev / Observability | 2025-06-24 |
-| **EE-M0.1** | HIGH | Telemetry Enhancement – Add Prometheus exporters and advanced dashboards | Planned | Core Dev / Observability | 2025-07-15 |
-| **EE-M0.2** | HIGH | ElectricSQL Sync PoC – offline-first replication stack integration | In Progress | Core Dev | 2025-07-20 |
-| **EE-M1** | HIGH | Issue Generator – Directory watcher + rule engine skeleton (flake8, markdownlint) feeding Script-Meta API | Planned | Core Dev | 2025-07-31 |
-| **EE-M2** | HIGH | Validation Portal – Next.js UI + reward integration calling EaaS `/mint` | Planned | Front-End Guild / Token Team | 2025-08-31 |
-| **EE-M3** | MEDIUM | Ethik Token Integration – Leverage existing mainnet token (0x633b346b85c4877ace4d47f7aa72c2a092136cb5) on Base; implement buy-back & reward contract | Planned | Token Team | 2025-09-30 |
-| **EE-M4** | MEDIUM | Automated Fixers – CI jobs that apply trivial fixes on closed Issues | Planned | CI Guild | 2025-10-31 |
+| **EE-M0** | CRITICAL | Telemetry MVP – Loki/Promtail & Grafana live | ✅ Done | Observability | 2025-06-24 |
+| **EE-M1** | HIGH | Ethik Kernel v1 (on-chain flagging, YAML evaluator, DB schema) | WIP | Core / Smart Contract | 2025-07-20 |
+| **EE-M1a** | HIGH | Moralis collector deployed + dashboards operational | Planned | Data Pipeline | 2025-07-25 |
+| **EE-M2** | HIGH | Validator Portal MVP (React, real-time feeds) | Planned | Front-End | 2025-08-10 |
+| **EE-M3** | MEDIUM | ETHIK Points ledger & buy-back automation (multi-sig) | Planned | Tokenomics | 2025-08-31 |
+| **EE-M4** | MEDIUM | Humour NFT mint & redemption workflow | Planned | Community | 2025-09-15 |
 
 Cross-References: `subsystems/EthikEngine/README.md`, `subsystems/EthikEngine/docs/EGOS_Ethik_Engine_Idea.md`, `/initiate_msak_analysis`, `/ai_assisted_research_and_synthesis`.
 
