@@ -11,6 +11,7 @@
 !docs-public/**
 !assets/**
 
-# Allow GitHub workflows and utility scripts
+# Allow only specific GitHub workflows and utility scripts
 !.github/**
-!scripts/**
+!scripts/utils/post_to_x.py
+# Keep all other scripts private
