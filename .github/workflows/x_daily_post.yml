@@ -1,9 +1,9 @@
-@references(level=0):
- - .windsurfrules
- - CODE_OF_CONDUCT.md
- - MQP.md
- - ROADMAP.md
- - CROSSREF_STANDARD.md
+# @references(level=0):
+# - .windsurfrules
+# - CODE_OF_CONDUCT.md
+# - MQP.md
+# - ROADMAP.md
+# - CROSSREF_STANDARD.md
 
 name: X Daily Post
 
