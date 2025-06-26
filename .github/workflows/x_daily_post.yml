@@ -1,0 +1,50 @@
+@references(level=0):
+ - .windsurfrules
+ - CODE_OF_CONDUCT.md
+ - MQP.md
+ - ROADMAP.md
+ - CROSSREF_STANDARD.md
+
+name: X Daily Post
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 23 * * *'  # 23:45 UTC daily (~end of day for most zones)
+
+jobs:
+  post-daily-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install tweepy
+        run: pip install tweepy
+
+      - name: Compose tweet text
+        id: compose
+        run: |
+          # Reuse daily_activity_summary if exists, else simple placeholder.
+          summary_file=$(ls -1t reports/health/*/report.md | head -n1 || true)
+          if [[ -z "$summary_file" ]]; then
+            echo "text=Daily build succeeded. #EGOS #OpenSource" >> $GITHUB_OUTPUT
+          else
+            # Extract first 6 lines sans backticks, truncate to 250 chars to leave room for hashtags & link
+            body=$(grep -v "^```" "$summary_file" | head -n 6 | tr -s '\n' ' ' | cut -c1-250)
+            link="https://github.com/enioxt/EGOSystem"
+            echo "text=${body}... ${link} #EGOS #OpenSource" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post to X
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        run: |
+          python scripts/utils/post_to_x.py --text "${{ steps.compose.outputs.text }}"

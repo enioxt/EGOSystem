@@ -10,3 +10,7 @@
 # Allow public docs + images
 !docs-public/**
 !assets/**
+
+# Allow GitHub workflows and utility scripts
+!.github/**
+!scripts/**
