@@ -39,4 +39,4 @@ jobs:
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
         run: |
-          python scripts/utils/post_to_x.py --text "${{ steps.compose.outputs.text }}"
+          python -m scripts.utils.post_to_x --text "${{ steps.compose.outputs.text }}"
