@@ -29,16 +29,8 @@ jobs:
       - name: Compose tweet text
         id: compose
         run: |
-          # Reuse daily_activity_summary if exists, else simple placeholder.
-          summary_file=$(ls -1t reports/health/*/report.md | head -n1 || true)
-          if [[ -z "$summary_file" ]]; then
-            echo "text=Daily build succeeded. #EGOS #OpenSource" >> $GITHUB_OUTPUT
-          else
-            # Extract first 6 lines sans backticks, truncate to 250 chars to leave room for hashtags & link
-            body=$(grep -v "^```" "$summary_file" | head -n 6 | tr -s '\n' ' ' | cut -c1-250)
-            link="https://github.com/enioxt/EGOSystem"
-            echo "text=${body}... ${link} #EGOS #OpenSource" >> $GITHUB_OUTPUT
-          fi
+          # Use simple placeholder for public repository
+          echo "text=Daily update from the EGOS project. Check out our latest developments at https://github.com/enioxt/EGOSystem #EGOS #OpenSource" >> $GITHUB_OUTPUT
 
       - name: Post to X
         env:
