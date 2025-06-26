@@ -6,7 +6,7 @@
 # - CROSSREF_STANDARD.md
 
 #!/usr/bin/env python3
-"""Post a summary tweet to X/Twitter.
+"""Post automated daily summary and report link to X/Twitter.
 
 Environment variables required (store as GitHub secrets!):
     X_API_KEY
@@ -14,9 +14,15 @@ Environment variables required (store as GitHub secrets!):
     X_ACCESS_TOKEN
     X_ACCESS_SECRET
 
-Usage: python post_to_x.py --text "Hello world" [--reply-to 123456]
-If --text is omitted the script will attempt to load the latest daily summary
-from reports/daily/<latest>/tweet.txt.
+The script publishes two tweets as a thread:
+1. Summary tweet: `<summary> #EEAS $ETHIK #EGOS #<KEYWORD>`
+2. Reply tweet with the link to the full report on GitHub: `Relatório completo: <report_url> #EEAS $ETHIK #EGOS #<KEYWORD>`
+
+Usage example:
+    python -m scripts.utils.post_to_x \
+        --summary "Build succeeded" \
+        --keyword DAILY \
+        --report-url "https://github.com/enioxt/EGOSystem/actions/runs/12345"
 """
 
 from __future__ import annotations
@@ -58,20 +64,40 @@ def create_client() -> tweepy.Client:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--text", help="Tweet text (<=280 chars)")
-    parser.add_argument("--reply-to", help="Tweet ID to reply to", default=None)
+    parser.add_argument("--summary", help="Resumo (<=280 chars)")
+    parser.add_argument("--keyword", help="Hashtag complementar sem #, será convertido para CAIXA ALTA", default="DAILY")
+    parser.add_argument("--report-url", help="URL do relatório completo", required=True)
     args = parser.parse_args()
 
-    text = args.text or find_latest_tweet_text()
-    if not text:
-        sys.exit("No tweet text provided and could not find default tweet.txt")
-    if len(text) > 280:
-        sys.exit(f"Tweet too long ({len(text)} chars). Trim to 280 or less.")
+    summary = args.summary or find_latest_tweet_text() or "Atualização diária do projeto."
+    keyword = args.keyword.upper()
+    report_url = args.report_url
+
+    hashtags = f"#EEAS $ETHIK #EGOS #{keyword}"
+
+    # Monta tweet resumo e garante 280 chars
+    max_summary_len = 280 - len(hashtags) - 1  # espaço
+    summary = summary.strip()
+    if len(summary) > max_summary_len:
+        summary = summary[: max_summary_len - 3].rstrip() + "..."
+    summary_tweet = f"{summary} {hashtags}"
+
+    report_tweet = f"Relatório completo: {report_url} {hashtags}"
+    if len(report_tweet) > 280:
+        # incluso hashtags e link já podem ocupar muitos chars; corta se precisar
+        excess = len(report_tweet) - 280
+        report_tweet = report_tweet[:-excess - 3] + "..."
 
     client = create_client()
-    resp = client.create_tweet(text=text, in_reply_to_tweet_id=args.reply_to)
-    tweet_url = f"https://x.com/user/status/{resp.data['id']}"  # replace 'user' with handle if known
-    print(f"Tweet posted: {tweet_url}")
+
+    # Publica tweet resumo
+    first = client.create_tweet(text=summary_tweet)
+    first_id = first.data["id"]
+    print(f"Resumo publicado. ID: {first_id}")
+
+    # Publica reply com link
+    reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
+    print(f"Relatório publicado. ID: {reply.data['id']}")
 
 
 if __name__ == "__main__":

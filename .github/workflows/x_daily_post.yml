@@ -9,6 +9,13 @@ name: X Daily Post
 
 on:
   workflow_dispatch:
+    inputs:
+      summary:
+        description: "Resumo curto (opcional)"
+        required: false
+      keyword:
+        description: "Hashtag complementar (sem #, em CAIXA ALTA)"
+        required: false
   schedule:
     - cron: '45 23 * * *'  # 23:45 UTC daily (~end of day for most zones)
 
@@ -26,12 +33,6 @@ jobs:
       - name: Install tweepy
         run: pip install tweepy
 
-      - name: Compose tweet text
-        id: compose
-        run: |
-          # Use simple placeholder for public repository
-          echo "text=Daily update from the EGOS project. Check out our latest developments at https://github.com/enioxt/EGOSystem #EGOS #OpenSource" >> $GITHUB_OUTPUT
-
       - name: Post to X
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
@@ -39,4 +40,9 @@ jobs:
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
         run: |
-          python -m scripts.utils.post_to_x --text "${{ steps.compose.outputs.text }}"
+          SUMMARY="${{ github.event.inputs.summary }}"
+          KEYWORD="${{ github.event.inputs.keyword }}"
+          if [ -z "$SUMMARY" ]; then SUMMARY="Atualização diária do projeto."; fi
+          if [ -z "$KEYWORD" ]; then KEYWORD="DAILY"; fi
+          REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          python -m scripts.utils.post_to_x --summary "$SUMMARY" --keyword "$KEYWORD" --report-url "$REPORT_URL"
