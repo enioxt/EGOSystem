@@ -86,59 +86,41 @@ def main():
 
     hashtags = f"#EEAS $ETHIK #EGOS #{keyword}"
 
-    # Build summary tweet and ensure 280 char limit
-    max_summary_len = 280 - len(hashtags) - 1  # space
-    summary = summary.strip()
-    if len(summary) > max_summary_len:
-        summary = summary[: max_summary_len - 3].rstrip() + "..."
-    summary_tweet = f"{summary} {hashtags}"
-
-    report_tweet = f"Full report: {report_url} {hashtags}"
-    if len(report_tweet) > 280:
-        # hashtags and link may already occupy many chars; truncate if needed
-        excess = len(report_tweet) - 280
-        report_tweet = report_tweet[:-excess - 3] + "..."
+    # Combine summary and report link in a single tweet
+    combined_tweet = f"{summary}\n\nFull report: {report_url}\n\n{hashtags}"
+    
+    # Ensure 280 char limit
+    if len(combined_tweet) > 280:
+        # Calculate how much to truncate from the summary
+        # Keep the report URL and hashtags intact
+        report_part = f"\n\nFull report: {report_url}\n\n{hashtags}"
+        max_summary_len = 280 - len(report_part)
+        summary = summary.strip()
+        if len(summary) > max_summary_len:
+            summary = summary[: max_summary_len - 3].rstrip() + "..."
+        combined_tweet = f"{summary}{report_part}"
 
     auth = get_oauth1_auth()
     url = "https://api.twitter.com/2/tweets"
     
     try:
-        # Post first tweet using API v2 with OAuth 1.0a
-        print(f"Posting summary tweet: {summary_tweet[:30]}...")
-        payload = {"text": summary_tweet}
+        # Post single combined tweet using API v2 with OAuth 1.0a
+        print(f"Posting combined tweet: {combined_tweet[:50]}...")
+        payload = {"text": combined_tweet}
         response = requests.post(url, json=payload, auth=auth)
         
         # Check response and get tweet ID
         if response.status_code != 201:
-            print(f"Error posting summary tweet. Status code: {response.status_code}")
+            print(f"Error posting tweet. Status code: {response.status_code}")
             print(f"Response: {response.text}")
             sys.exit(1)
             
         response_data = response.json()
-        first_id = response_data["data"]["id"]
-        print(f"Summary posted with API v2. ID: {first_id}")
+        tweet_id = response_data["data"]["id"]
+        print(f"Tweet posted with API v2. ID: {tweet_id}")
         
-        # Post reply tweet
-        print(f"Posting report tweet: {report_tweet[:30]}...")
-        reply_payload = {
-            "text": report_tweet,
-            "reply": {"in_reply_to_tweet_id": first_id}
-        }
-        
-        reply_response = requests.post(url, json=reply_payload, auth=auth)
-        
-        # Check response
-        if reply_response.status_code != 201:
-            print(f"Error posting reply tweet. Status code: {reply_response.status_code}")
-            print(f"Response: {reply_response.text}")
-            sys.exit(1)
-            
-        reply_data = reply_response.json()
-        reply_id = reply_data["data"]["id"]
-        print(f"Report link posted with API v2. ID: {reply_id}")
-        
-        print("✅ Posts completed successfully!")
-        print(f"View at: https://x.com/i/status/{first_id}")
+        print("✅ Post completed successfully!")
+        print(f"View at: https://x.com/i/status/{tweet_id}")
 
     except Exception as e:
         print(f"Error posting to X: {e}")
