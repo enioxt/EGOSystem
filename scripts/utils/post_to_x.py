@@ -58,8 +58,8 @@ def create_client() -> tweepy.Client:
     oauth2_token = os.getenv("X_OAUTH2_ACCESS_TOKEN")
     refresh_token = os.getenv("X_OAUTH2_REFRESH_TOKEN")
     
-    # Check if we have OAuth 2.0 credentials
-    if oauth2_token and client_id:
+    # Temporarily disable OAuth 2.0 due to authorization issues
+    if False and oauth2_token and client_id:
         print("Using OAuth 2.0 authentication")
         return tweepy.Client(
             consumer_key=key,
@@ -116,14 +116,40 @@ def main():
 
     client = create_client()
 
-    # Post summary tweet
-    first = client.create_tweet(text=summary_tweet)
-    first_id = first.data["id"]
-    print(f"Summary posted. ID: {first_id}")
+    try:
+        # Try using v2 API endpoint
+        print("Attempting to post with API v2 endpoint...")
+        first = client.create_tweet(text=summary_tweet)
+        first_id = first.data["id"]
+        print(f"Summary posted. ID: {first_id}")
 
-    # Post reply with report link
-    reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
-    print(f"Report link posted. ID: {reply.data['id']}")
+        # Post reply with report link
+        reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
+        print(f"Report link posted. ID: {reply.data['id']}")
+    except Exception as e:
+        print(f"Error with API v2: {e}")
+        print("Falling back to API v1.1...")
+        
+        # Create API v1.1 instance
+        auth = tweepy.OAuth1UserHandler(
+            os.getenv("X_API_KEY"),
+            os.getenv("X_API_SECRET"),
+            os.getenv("X_ACCESS_TOKEN"),
+            os.getenv("X_ACCESS_SECRET")
+        )
+        api = tweepy.API(auth)
+        
+        # Post using v1.1 API
+        first = api.update_status(summary_tweet)
+        print(f"Summary posted with v1.1 API. ID: {first.id}")
+        
+        # Post reply with report link
+        reply = api.update_status(
+            status=report_tweet,
+            in_reply_to_status_id=first.id,
+            auto_populate_reply_metadata=True
+        )
+        print(f"Report link posted with v1.1 API. ID: {reply.id}")
 
 
 if __name__ == "__main__":

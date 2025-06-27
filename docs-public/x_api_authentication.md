@@ -4,6 +4,8 @@
 
 This document explains the authentication methods used for the automated daily posting workflow to X.com (formerly Twitter).
 
+> **IMPORTANT UPDATE (2025-06-27)**: Due to OAuth 2.0 authorization issues with X.com, the script now includes automatic fallback to OAuth 1.0a with API v1.1 endpoints. This ensures the posting workflow continues to function while OAuth 2.0 issues are being resolved.
+
 ## Authentication Methods
 
 The EGOS system supports two authentication methods for X API:
