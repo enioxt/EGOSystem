@@ -48,17 +48,43 @@ def find_latest_tweet_text() -> str | None:
 
 
 def create_client() -> tweepy.Client:
+    # OAuth 1.0a credentials (legacy)
     key = os.getenv("X_API_KEY")
     secret = os.getenv("X_API_SECRET")
+    
+    # OAuth 2.0 credentials (modern)
+    client_id = os.getenv("X_CLIENT_ID")
+    client_secret = os.getenv("X_CLIENT_SECRET")
+    oauth2_token = os.getenv("X_OAUTH2_ACCESS_TOKEN")
+    refresh_token = os.getenv("X_OAUTH2_REFRESH_TOKEN")
+    
+    # Check if we have OAuth 2.0 credentials
+    if oauth2_token and client_id:
+        print("Using OAuth 2.0 authentication")
+        return tweepy.Client(
+            consumer_key=key,
+            consumer_secret=secret,
+            access_token=oauth2_token,  # OAuth 2.0 token
+            refresh_token=refresh_token,
+            client_id=client_id,
+            client_secret=client_secret,
+            wait_on_rate_limit=True,
+        )
+    
+    # Fallback to OAuth 1.0a
     token = os.getenv("X_ACCESS_TOKEN")
     token_secret = os.getenv("X_ACCESS_SECRET")
+    
     if not all([key, secret, token, token_secret]):
         sys.exit("Missing X API credentials in environment variables. Aborting.")
+    
+    print("Using OAuth 1.0a authentication")
     return tweepy.Client(
         consumer_key=key,
         consumer_secret=secret,
         access_token=token,
         access_token_secret=token_secret,
+        wait_on_rate_limit=True,
     )
 
 
