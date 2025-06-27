@@ -30,8 +30,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install tweepy
-        run: pip install tweepy
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       - name: Post to X
         env:
