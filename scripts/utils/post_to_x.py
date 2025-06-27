@@ -36,13 +36,6 @@ from pathlib import Path
 import requests
 from requests_oauthlib import OAuth1
 
-# Mantenha tweepy como fallback se necessário
-try:
-    import tweepy  # type: ignore
-    TWEEPY_AVAILABLE = True
-except ImportError:
-    TWEEPY_AVAILABLE = False
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DAILY_DIR = REPO_ROOT / "reports" / "daily"
 
@@ -103,11 +96,20 @@ def main():
     auth = get_oauth1_auth()
     url = "https://api.twitter.com/2/tweets"
     
+    print(f"Using API v2 endpoint: {url}")
+    
     try:
         # Post single combined tweet using API v2 with OAuth 1.0a
         print(f"Posting combined tweet: {combined_tweet[:50]}...")
         payload = {"text": combined_tweet}
-        response = requests.post(url, json=payload, auth=auth)
+        print(f"Request payload: {json.dumps(payload)}")
+        
+        # Set headers explicitly for API v2
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        
+        response = requests.post(url, json=payload, headers=headers, auth=auth)
         
         # Check response and get tweet ID
         if response.status_code != 201:
