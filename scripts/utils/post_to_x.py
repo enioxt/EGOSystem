@@ -98,30 +98,24 @@ def main():
 
     client = create_client()
 
-    # Create API v1.1 instance for direct access
-    print("Using API v1.1 endpoints directly...")
-    auth = tweepy.OAuth1UserHandler(
-        os.getenv("X_API_KEY"),
-        os.getenv("X_API_SECRET"),
-        os.getenv("X_ACCESS_TOKEN"),
-        os.getenv("X_ACCESS_SECRET")
-    )
-    api = tweepy.API(auth)
+    # Use OAuth 1.0a with API v2 endpoints
+    print("Using OAuth 1.0a with API v2 endpoints...")
     
     try:
-        # Post using v1.1 API
+        # Post using v2 API with OAuth 1.0a credentials
         print(f"Posting summary tweet: {summary_tweet[:30]}...")
-        first = api.update_status(summary_tweet)
-        print(f"Summary posted with v1.1 API. ID: {first.id}")
+        first = client.create_tweet(text=summary_tweet)
+        first_id = first.data["id"]
+        print(f"Summary posted with API v2. ID: {first_id}")
         
         # Post reply with report link
         print(f"Posting report tweet: {report_tweet[:30]}...")
-        reply = api.update_status(
-            status=report_tweet,
-            in_reply_to_status_id=first.id,
-            auto_populate_reply_metadata=True
-        )
-        print(f"Report link posted with v1.1 API. ID: {reply.id}")
+        reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
+        print(f"Report link posted with API v2. ID: {reply.data['id']}")
+        
+        print("✅ Posts completed successfully!")
+        print(f"View at: https://x.com/i/status/{first_id}")
+
     except Exception as e:
         print(f"Error posting to X: {e}")
         sys.exit(1)
