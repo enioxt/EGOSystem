@@ -51,27 +51,6 @@ def create_client() -> tweepy.Client:
     # OAuth 1.0a credentials (legacy)
     key = os.getenv("X_API_KEY")
     secret = os.getenv("X_API_SECRET")
-    
-    # OAuth 2.0 credentials (modern)
-    client_id = os.getenv("X_CLIENT_ID")
-    client_secret = os.getenv("X_CLIENT_SECRET")
-    oauth2_token = os.getenv("X_OAUTH2_ACCESS_TOKEN")
-    refresh_token = os.getenv("X_OAUTH2_REFRESH_TOKEN")
-    
-    # Temporarily disable OAuth 2.0 due to authorization issues
-    if False and oauth2_token and client_id:
-        print("Using OAuth 2.0 authentication")
-        return tweepy.Client(
-            consumer_key=key,
-            consumer_secret=secret,
-            access_token=oauth2_token,  # OAuth 2.0 token
-            refresh_token=refresh_token,
-            client_id=client_id,
-            client_secret=client_secret,
-            wait_on_rate_limit=True,
-        )
-    
-    # Fallback to OAuth 1.0a
     token = os.getenv("X_ACCESS_TOKEN")
     token_secret = os.getenv("X_ACCESS_SECRET")
     
@@ -79,6 +58,9 @@ def create_client() -> tweepy.Client:
         sys.exit("Missing X API credentials in environment variables. Aborting.")
     
     print("Using OAuth 1.0a authentication")
+    print(f"API Key: {key[:5]}...")
+    print(f"Access Token: {token[:5]}...")
+    
     return tweepy.Client(
         consumer_key=key,
         consumer_secret=secret,
@@ -116,40 +98,33 @@ def main():
 
     client = create_client()
 
+    # Create API v1.1 instance for direct access
+    print("Using API v1.1 endpoints directly...")
+    auth = tweepy.OAuth1UserHandler(
+        os.getenv("X_API_KEY"),
+        os.getenv("X_API_SECRET"),
+        os.getenv("X_ACCESS_TOKEN"),
+        os.getenv("X_ACCESS_SECRET")
+    )
+    api = tweepy.API(auth)
+    
     try:
-        # Try using v2 API endpoint
-        print("Attempting to post with API v2 endpoint...")
-        first = client.create_tweet(text=summary_tweet)
-        first_id = first.data["id"]
-        print(f"Summary posted. ID: {first_id}")
-
-        # Post reply with report link
-        reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
-        print(f"Report link posted. ID: {reply.data['id']}")
-    except Exception as e:
-        print(f"Error with API v2: {e}")
-        print("Falling back to API v1.1...")
-        
-        # Create API v1.1 instance
-        auth = tweepy.OAuth1UserHandler(
-            os.getenv("X_API_KEY"),
-            os.getenv("X_API_SECRET"),
-            os.getenv("X_ACCESS_TOKEN"),
-            os.getenv("X_ACCESS_SECRET")
-        )
-        api = tweepy.API(auth)
-        
         # Post using v1.1 API
+        print(f"Posting summary tweet: {summary_tweet[:30]}...")
         first = api.update_status(summary_tweet)
         print(f"Summary posted with v1.1 API. ID: {first.id}")
         
         # Post reply with report link
+        print(f"Posting report tweet: {report_tweet[:30]}...")
         reply = api.update_status(
             status=report_tweet,
             in_reply_to_status_id=first.id,
             auto_populate_reply_metadata=True
         )
         print(f"Report link posted with v1.1 API. ID: {reply.id}")
+    except Exception as e:
+        print(f"Error posting to X: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
