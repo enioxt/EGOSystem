@@ -11,10 +11,10 @@ on:
   workflow_dispatch:
     inputs:
       summary:
-        description: "Resumo curto (opcional)"
+        description: "Short summary (optional)"
         required: false
       keyword:
-        description: "Hashtag complementar (sem #, em CAIXA ALTA)"
+        description: "Additional hashtag (without #, will be converted to UPPERCASE)"
         required: false
   schedule:
     - cron: '45 23 * * *'  # 23:45 UTC daily (~end of day for most zones)
@@ -42,7 +42,7 @@ jobs:
         run: |
           SUMMARY="${{ github.event.inputs.summary }}"
           KEYWORD="${{ github.event.inputs.keyword }}"
-          if [ -z "$SUMMARY" ]; then SUMMARY="Atualização diária do projeto."; fi
+          if [ -z "$SUMMARY" ]; then SUMMARY="Daily project update."; fi
           if [ -z "$KEYWORD" ]; then KEYWORD="DAILY"; fi
           REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           python -m scripts.utils.post_to_x --summary "$SUMMARY" --keyword "$KEYWORD" --report-url "$REPORT_URL"

@@ -16,7 +16,7 @@ Environment variables required (store as GitHub secrets!):
 
 The script publishes two tweets as a thread:
 1. Summary tweet: `<summary> #EEAS $ETHIK #EGOS #<KEYWORD>`
-2. Reply tweet with the link to the full report on GitHub: `Relatório completo: <report_url> #EEAS $ETHIK #EGOS #<KEYWORD>`
+2. Reply tweet with the link to the full report on GitHub: `Full report: <report_url> #EEAS $ETHIK #EGOS #<KEYWORD>`
 
 Usage example:
     python -m scripts.utils.post_to_x \
@@ -64,40 +64,40 @@ def create_client() -> tweepy.Client:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--summary", help="Resumo (<=280 chars)")
-    parser.add_argument("--keyword", help="Hashtag complementar sem #, será convertido para CAIXA ALTA", default="DAILY")
-    parser.add_argument("--report-url", help="URL do relatório completo", required=True)
+    parser.add_argument("--summary", help="Summary text (<=280 chars)")
+    parser.add_argument("--keyword", help="Additional hashtag without #, will be converted to UPPERCASE", default="DAILY")
+    parser.add_argument("--report-url", help="URL to the full report", required=True)
     args = parser.parse_args()
 
-    summary = args.summary or find_latest_tweet_text() or "Atualização diária do projeto."
+    summary = args.summary or find_latest_tweet_text() or "Daily project update."
     keyword = args.keyword.upper()
     report_url = args.report_url
 
     hashtags = f"#EEAS $ETHIK #EGOS #{keyword}"
 
-    # Monta tweet resumo e garante 280 chars
-    max_summary_len = 280 - len(hashtags) - 1  # espaço
+    # Build summary tweet and ensure 280 char limit
+    max_summary_len = 280 - len(hashtags) - 1  # space
     summary = summary.strip()
     if len(summary) > max_summary_len:
         summary = summary[: max_summary_len - 3].rstrip() + "..."
     summary_tweet = f"{summary} {hashtags}"
 
-    report_tweet = f"Relatório completo: {report_url} {hashtags}"
+    report_tweet = f"Full report: {report_url} {hashtags}"
     if len(report_tweet) > 280:
-        # incluso hashtags e link já podem ocupar muitos chars; corta se precisar
+        # hashtags and link may already occupy many chars; truncate if needed
         excess = len(report_tweet) - 280
         report_tweet = report_tweet[:-excess - 3] + "..."
 
     client = create_client()
 
-    # Publica tweet resumo
+    # Post summary tweet
     first = client.create_tweet(text=summary_tweet)
     first_id = first.data["id"]
-    print(f"Resumo publicado. ID: {first_id}")
+    print(f"Summary posted. ID: {first_id}")
 
-    # Publica reply com link
+    # Post reply with report link
     reply = client.create_tweet(text=report_tweet, in_reply_to_tweet_id=first_id)
-    print(f"Relatório publicado. ID: {reply.data['id']}")
+    print(f"Report link posted. ID: {reply.data['id']}")
 
 
 if __name__ == "__main__":
