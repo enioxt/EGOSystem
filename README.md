@@ -14,6 +14,7 @@
 !Ethical Framework: ETHIK
 ![GitHub Stars](https://github.com/enioxt/EGOS)
 ![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)
+![CI](https://github.com/enioxt/EGOS/actions/workflows/ci.yml/badge.svg)
 
 ## ðŸ” What is EGOS?
 
@@ -55,6 +56,10 @@ EGOS stands apart from other AI ethics platforms by implementing a practical, ac
 | **KOIOS PDD System** | Standardized Prompt Design Document (PDD) creation, validation, and management |
 | **Automated Link Hygiene** | A CI/CD workflow and associated scripts (`link_checker.py`, `fix_broken_links.py`) that automatically detect and repair broken Markdown links, ensuring documentation integrity. See the workflow file for details. |
 | **Financial ROI Analytics** | Quantifies risk-mitigation savings with real incident cost data and ATRiAN score-driven ROI calculations |
+| **API Security Layer** | Unified API key authentication with weekly key rotation via GitHub Actions |
+| **Secrets Management** | Centralized secrets storage & automated rotation strategy |
+| **Container Vulnerability Scanning** | Continuous Trivy scanning in CI pipelines and nightly health checks |
+| **Docs Governance Sync** | Keeps documentation up-to-date automatically using the `/docs_governance_sync` workflow |
 
 ## ðŸ’Ž Core Subsystems
 
@@ -136,25 +141,42 @@ pip install -r requirements.txt
 streamlit run dashboard/streamlit_app.py
 ```
 
-### Spin up the lightweight API & monitoring stack (Docker)
-For a one-command local environment that launches all core EGOS services (APIs, Prometheus, Grafana, Postgres) in a lightweight configuration suitable for WSL2:
+### Spin-up the full API & Website stack (WSL2-optimised)
+All core EGOS services – APIs *and* the Next.js website – launch with one script:
 
-```powershell
+```bash
 # from repo root
-PS C:\EGOS> docker compose -f docker-compose.light.yml up -d
+./scripts/start_stack.sh            # builds missing images, then docker compose up -d
 ```
 
-Access points:
-- Prometheus → `http://localhost:9090`
-- Grafana → `http://localhost:3000` (user `admin`, pwd `egos`)
-- ATRiAN EaaS API → `http://localhost:8001/docs`
-- Script-Metadata API → `http://localhost:8002/docs`
-- Postgres DB → `localhost:5432`
+First run will build the `website` image (≈3 min). Afterwards startup takes ~5-10 s.
 
-See **[docs/infra/local_dev_api_stack.md](docs/infra/local_dev_api_stack.md)** for details, troubleshooting and extending the stack.
+Service map (default ports):
+| Service | URL |
+|---------|-----|
+| EaaS API | http://localhost:8000 |
+| Script-Meta API | http://localhost:8100 |
+| Aries Agent | http://localhost:8020 (admin) / 8021 (http) |
+| Website (Next.js) | http://localhost:3001 |
+| Grafana | http://localhost:8080 |
+| Prometheus | http://localhost:9090 |
+| Loki | http://localhost:3100 |
+| Postgres (wallet-db) | localhost:5432 |
+
+`docker compose ps` will show live health; `docker compose logs -f <service>` for logs.
+
+Automated health reports are generated after every push and stored under `reports/health/` (see CI workflow `health_report.yml`).
+
+See **docs/wsl_migration_completion_report.md** for environment details.
+
 ## ðŸ’° Blockchain Integration
 
-EGOS integrates with the BASE blockchain through the $ETHIK token:
+EGOS integrates with the BASE blockchain through the $ETHIK token and now streams on-chain rewards via the *EgosRewardSplitter* smart contract (Sepolia testnet, verified):
+
+| Contract | Network | Address | Explorer |
+|----------|---------|---------|----------|
+| EgosRewardSplitter | Sepolia | `0x4f95492935aB44FD3B4AE87ecaa094F741b0ABFc` | [Etherscan](https://sepolia.etherscan.io/address/0x4f95492935aB44FD3B4AE87ecaa094F741b0ABFc) |
+
 
 * **BASE**: <a href="https://gmgn.ai/base/token/0x633b346b85c4877ace4d47f7aa72c2a092136cb5" target="_blank">`0x633b346b85c4877ace4d47f7aa72c2a092136cb5`</a>
 
@@ -226,6 +248,7 @@ The AutoCrossRef system transforms a static collection of files into a dynamic, 
 | [**ðŸ§© Integration Examples**](sdks/atrian-sdk/docs/examples.md) | Code samples for common use cases |
 | [**ðŸ”­ Roadmap**](ROADMAP.md) | Future development plans and priorities |
 | [**🛠️ Top Incidents Case Studies**](ATRIAN/docs/case_studies/top_incidents.md) | Diagnostics of five high-severity AI incidents & ATRiAN mitigation patterns |
+| **📜 Workflow Index** | See consolidated active & archived workflows at [`/.windsurf/workflows/_index.md`](.windsurf/workflows/_index.md) |
 
 ## ðŸŒŸ Use Cases
 
@@ -235,11 +258,25 @@ The AutoCrossRef system transforms a static collection of files into a dynamic, 
 - **Public Sector AI**: Accountable decision-making in government applications
 - **Research Oversight**: Ethical guardrails for advanced AI research
 
-## ðŸ‘¥ Community & Contribution
+## 🤝 Call for Contributors
 
-We welcome contributors of all skill levels! Check out our [**CONTRIBUTING.md**](CONTRIBUTING.md) guide to get started.
+EGOS is an ethics-first, fair-launch project — no pre-sale, no VC allocation. We rely entirely on community talent.
 
-- **Good First Issues**: Look for issues tagged with `good-first-issue` for newcomers
+Read the [Contributor Onboarding Guide](CONTRIBUTING.md) for tooling and style details.
+
+A detailed breakdown of the **ETHIK reward flow** lives in [`EthikEngine/docs/tokenomics`](subsystems/EthikEngine/docs/tokenomics).
+
+| Domain | Example Tasks |
+|--------|---------------|
+| 💻 Development | Solidity, Foundry, Python, React/Next.js, CI/CD |
+| 🎨 Design | Brand system, Figma mocks, UX research |
+| 🧪 QA & Testers | Scenario testing, bug repro, usability feedback |
+| 📊 DAO & Governance | Proposal templates, reputation weighting |
+| 🤖 AI & NLP | Ethical validators, dataset curation |
+
+> Rewards are streamed automatically via smart contracts once the *EgosRewardSplitter* goes live.
+
+- **Good First Issues**: tag `good-first-issue`
 - **Feature Requests**: Share ideas in GitHub Discussions
 - **Bug Reports**: Submit via GitHub Issues
 - **Documentation**: Help improve our guides and references

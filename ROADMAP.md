@@ -2,9 +2,9 @@
 title: EGOS Project Roadmap
 description: Comprehensive development roadmap for the EGOS project
 created: 2025-05-20
-updated: 2025-06-15
+updated: 2025-06-27
 author: EGOS Team
-version: 2.6.0
+version: 2.7.0
 status: Active
 tags: [roadmap, planning, development, strategic_review, atrian, monetization, public_launch, ethik_action_validator, eaas]
 ---
@@ -18,7 +18,7 @@ tags: [roadmap, planning, development, strategic_review, atrian, monetization, p
 # 🛡️ EGOS - Project Roadmap
 
 **Version:** 2.6.0
-**Last Updated:** 2025-06-15
+**Last Updated:** 2025-06-27
 **🌐 Website:** [https://enioxt.github.io/egos](https://enioxt.github.io/egos)
 
 ## Introduction
@@ -55,13 +55,15 @@ All roadmap items converge towards the rollout of the **Ethik Engine** (see `sub
 - **Cross-References**: `scripts/git_promote.ps1`, `.github/workflows/dev_ci.yml`, `.git/hooks/pre-commit`, `scripts/setup_dev_env.ps1`, `WORK_2025-06-24_Stable_vs_Dev_Isolation.md`
 
 ### AUTOXREF-001: AutoCrossRef Subsystem Development
-- **Status**: In Progress
+- **Status**: Completed (2025-06-27) ✅
 - **Owner**: EGOS Team
 - **Timeline**: Q3-Q4 2025 (Initial Phases)
 - **Description**: Develop the `AutoCrossRef` subsystem to automate the detection, validation, and integration of cross-references within EGOS project files. This aims to improve documentation integrity, navigability, and reduce manual maintenance.
 - **Recent Progress**: 
   - Added **Level-0** universal reference block to every file (completed via `quick_crossref_cleaner.py`).
-  - Implemented **Level-1** contextual reference generator (`build_level1_xrefs.py`) with git pre-commit enforcement and nightly `/cross_reference_maintenance` workflow. 25 legacy files updated automatically.
+  - Implemented **Level-1** contextual reference generator (`build_level1_xrefs.py`) with git pre-commit enforcement and nightly `/cross_reference_maintenance` workflow. Level-1 coverage now at **42 %** (target ≥ 40 %).
+  - Added **Missing-Reference Guard** (`check_missing_refs.py`) to fail CI on unresolved paths; integrated in pre-commit and nightly job.
+  - CLI enhancements: file-extension filtering (`--ext`), directory pruning optimisation, clearer dry-run output, robust error handling.
   - CLI enhancements: file-extension filtering (`--ext`), directory pruning optimisation, clearer dry-run output, robust error handling.
 - **Next Steps (Updated 2025-06-16)**:
   1. **Level-1 Coverage Expansion** – Auto-generate `xrefs.yml` maps for all remaining namespaces (`docs/standards`, `scripts/*`, root docs) and prune manually. Target ≥40 % Level-1 coverage.
@@ -81,11 +83,23 @@ All roadmap items converge towards the rollout of the **Ethik Engine** (see `sub
 
 ### Key Recent Accomplishments
 
+* **SEC-API-KEY-AUTH `COMPLETED`**: Added API Key security layer in FastAPI endpoints (`security.py`) and weekly key rotation via GitHub Actions (`rotate-ee-api-key.yml`). (Completed: 2025-06-26)
+* **SEC-SECRETS-MGMT `COMPLETED`**: Implemented secrets management strategy and documentation (`secrets_management.md`). (Completed: 2025-06-26)
+* **SEC-GITHUB-HARDENING `COMPLETED`**: Enabled CodeQL scans, Dependabot, CODEOWNERS enforcement, and added hardening checklist. (Completed: 2025-06-26)
+* **SEC-TRIVY-SCAN `COMPLETED`**: Integrated Trivy container vulnerability scanning into CI. (Completed: 2025-06-26)
+* **DOCS-GOVERNANCE-SYNC `COMPLETED`**: Automated documentation synchronization workflow (`docs-governance-sync.yml`). (Completed: 2025-06-27)
+* **WORKFLOW-CONSOLIDATION `COMPLETED`**: Archived deprecated workflows and added consolidated index. (Completed: 2025-06-27)
+* **SEC-WORKFLOW-CONSOLIDATION `COMPLETED`**: Hardened workflow secrets, consolidated security checks (Trivy, secret scanning) into unified pipeline. (Completed: 2025-06-27)
+* **WEB-WALLET-SSR-FIX `COMPLETED`**: Isolated WalletConnect/RainbowKit providers to client-only bundles, added `WalletProviders` abstraction and WSL optimisation workflow (`nextjs_wsl_optimization.md`), eliminating `indexedDB` SSR errors and improving Next.js dev stability. (Completed: 2025-06-29)
+
+
+
 * **INFRA-API-STACK-001 `COMPLETED`**: Stabilized Local API Stack. Developed a robust, one-command startup for all core services (APIs, DB, Monitoring) in a lightweight WSL2 environment using `docker-compose.light.yml`. Includes health checks, dependency fixes, and full observability. (Completed: 2025-06-23)
 * **KOIOS-PDD-001 `COMPLETED`**: PDD Validation Framework (KOIOS MVP). Established hierarchical PDD schema (`pdd_schema.py`), validation script (`validate_pdd.py`), integrated into `/distill_and_vault_prompt` workflow, and added `RULE-OPS-CHECKLIST-001` to `.windsurfrules`. Successfully validated generic and specialized PDDs. (Completed: 2025-06-10)
 * Enhanced `.windsurfrules` with `RULE-KOIOS-05` for comprehensive cross-referencing.
 * Established the `/project_handover_procedure` workflow and template for AI/User context transfer.
 * Initiated the PromptVault system (Phase 1 MVP) with the `/distill_and_vault_prompt` workflow and design document.
+* **INFRA-WSL2-MIGRATION-001 `COMPLETED`**: Finalized full EGOS WSL2 migration. Standardized API health endpoints, resolved port conflicts, automated health checks, and produced a comprehensive migration completion report (`docs/wsl_migration_completion_report.md`). (Completed: 2025-06-26)
 * Documented PowerShell fallback (`RULE-FS-MCP-02`) in `.windsurfrules` for file edits due to AI tool limitations.
 
 ### II. Core Development & Subsystem Maturation
@@ -126,6 +140,13 @@ This section details the ongoing and planned development for core EGOS component
     *   **Due**: Q1 2026 (Phase 3: Initial Subsystem Integrations)
 
 #### Documentation & Standards
+
+*   **FILE-HYGIENE-001 `MEDIUM`**: Intelligent File Hygiene & Obsolescence Scoring System.
+    *   **Status**: Planned
+    *   **Description**: Implement `hygiene_scanner.py` + nightly workflow to compute usage scores, detect duplicates, and surface stale files. Outputs JSON & Grafana dashboards. See `docs/standards/proposals/file_hygiene_system.md`.
+    *   **Owner**: Infra + Docs Team
+    *   **Due**: Q3 2025
+
 
 *   **DOCS-HYGIENE-001 `MEDIUM`**: Fix Broken Links in Documentation.
     *   **Status**: To Do
@@ -838,6 +859,13 @@ Cross-References: `subsystems/AgentCore/README.md`, `WORK_2025-06-24_AgentCore_P
 | **EE-M2** | HIGH | Validator Portal MVP (React, real-time feeds) | Planned | Front-End | 2025-08-10 |
 | **EE-M3** | MEDIUM | ETHIK Points ledger & buy-back automation (multi-sig) | Planned | Tokenomics | 2025-08-31 |
 | **EE-M4** | MEDIUM | Humour NFT mint & redemption workflow | Planned | Community | 2025-09-15 |
+
+| **EE-M5** | HIGH | Reputation Oracle System (Dashboard, ZKP credentials) | Planned | Core / Data | 2025-10-01 |
+| **EE-M6** | HIGH | Sybil Resistance Behavioural Fingerprinting + Tiered Identity | Planned | AI / Security | 2025-10-15 |
+| **EE-M7** | HIGH | Token Utility v1 (Staking lockups, Fee discount, Burn) | Planned | Tokenomics | 2025-11-01 |
+| **EE-M8** | MEDIUM | Meta-Governance Layer (Delegated Validation) | Planned | Governance | 2025-11-15 |
+| **EE-M9** | MEDIUM | Cross-Chain Bridge & ZK Attestations | Planned | Core / DevOps | 2025-12-01 |
+| **EE-M10** | MEDIUM | Slashing Insurance Pool Pilot | Planned | Finance | 2026-01-15 |
 
 Cross-References: `subsystems/EthikEngine/README.md`, `subsystems/EthikEngine/docs/EGOS_Ethik_Engine_Idea.md`, `/initiate_msak_analysis`, `/ai_assisted_research_and_synthesis`.
 
