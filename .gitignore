@@ -6,9 +6,11 @@
 !ROADMAP.md
 !LICENSE
 !/.gitignore
+!.pre-commit-config.yaml
 
 # Allow public docs + images
-!docs-public/**
+!docs/**
+!daily-reports/**
 !assets/**
 
 # Allow only specific GitHub workflows and utility scripts
