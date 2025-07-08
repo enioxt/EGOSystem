@@ -1,4 +1,45 @@
-# EGOS: The Ethical & Generative Operating System
+# EGOS: Ethical Generative Operating System
+
+**EGOS is a decentralized ecosystem that aligns advanced technology with human and planetary well-being.**
+
+We combine cutting-edge AI, transparent governance and regenerative economics to empower communities to solve complex problems and share in the value they create.
+
+---
+
+## Vision at a Glance
+
+1. **Regenerative Value** – Every initiative replenishes social and ecological systems.
+2. **Radical Transparency** – Governance and value flows are auditable by anyone.
+3. **Decentralized Governance** – Stakeholders co-create policy through ethical frameworks.
+4. **Mycelium Architecture** – A resilient network of modular services inspired by nature.
+
+---
+
+## EthikEngine
+
+At the heart of EGOS is **EthikEngine** – a programmable ethics layer that enforces fair rewards, ensures mission alignment and provides a tamper-proof audit trail for every action.
+
+---
+
+## Learn More
+
+| Topic | Description |
+|-------|-------------|
+| [Whitepaper](docs/whitepaper/00_executive_summary.md) | Foundational concepts & long-term vision. |
+| [Core Concepts](docs/concepts/) | Mechanics such as Listening Spirals and Coruja Moderation. |
+| [Guiding Principles](docs/principles/) | Manifesto and philosophies that drive development. |
+| [Tokenomics](docs/tokenomics/ethik_point_matrix.md) | How value is created and distributed. |
+| [EthikEngine Overview](docs/ethik/ethik_engine_overview.md) | How ethics are enforced in code. |
+
+Additional high-level documents live in the `docs/` folder.
+
+---
+
+## Get Involved
+
+We are assembling a global community of thinkers, builders and visionaries committed to shaping a more ethical digital future.
+
+*Follow our official channels for updates and opportunities to contribute.*
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/EnioGPT/EGOS/main/docs/assets/logo/egos_logo_splash_text.png" alt="EGOS Logo" width="600"/>
