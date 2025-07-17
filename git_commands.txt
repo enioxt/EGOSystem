@@ -1,0 +1,43 @@
+#!/bin/bash
+# Comandos Git para executar manualmente
+
+# 1. Inicializar repositório
+git init
+
+# 2. Adicionar arquivos
+git add .
+
+# 3. Fazer commit
+git commit -m "🍄 EGOSystem: Honest Documentation & Mycelium Network
+
+✨ Features:
+- Honest storytelling (no exaggerations)
+- Mycelium Network concept (fungal intelligence)
+- Community self-regulation philosophy  
+- DNA system examples (conceptual)
+- ATRiAN ethical filter applied
+- Super-prompt distillation
+
+🧬 Philosophy:
+- Platform 100% free
+- Community self-regulates naturally
+- Share, care, don't ignore wrong
+- Mycelium: problems solved by brothers
+- Truth over marketing
+
+🎯 Honest State:
+- Experimental project (not revolution)
+- Concepts documented (not implemented)
+- Tests from users (not us)
+- Users will know 'de uma forma mágica'
+
+✧༺❀༻∞ EGOSystem: Honest Human Connection ∞༺❀༻✧"
+
+# 4. Adicionar remote
+git remote add origin https://github.com/enioxt/EGOSystem.git
+
+# 5. Configurar branch main
+git branch -M main
+
+# 6. Push para GitHub
+git push -u origin main
