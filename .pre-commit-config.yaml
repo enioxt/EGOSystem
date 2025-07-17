@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: whitelist-public-paths
+        name: Enforce public whitelist paths
+        entry: python .github/hooks/ensure_public_whitelist.py
+        language: python
+        types: [file]
